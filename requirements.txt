@@ -1,0 +1,38 @@
+# Core Dependencies
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Web3 & Blockchain
+web3>=7.0.0
+eth-account>=0.13.0
+py-clob-client>=0.20.0
+
+# HTTP & Async
+aiohttp==3.9.1
+httpx==0.25.2
+
+# Exchange APIs
+ccxt>=4.3.0
+
+# GraphQL (for Polymarket)
+gql==3.5.0
+aiohttp-retry==2.8.3
+
+# Math & Statistics
+numpy==1.26.2
+scipy==1.11.4
+
+# Utilities
+python-dotenv==1.0.0
+python-dateutil==2.8.2
+rich==13.7.0
+
+# Dashboard
+flask==3.0.0
+
+# Database (optional)
+# psycopg2-binary==2.9.9
+# redis==5.0.1
+
+# Monitoring
+# prometheus-client==0.19.0

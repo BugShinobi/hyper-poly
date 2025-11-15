@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Main arbitrage bot
+  arb-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poly-hl-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+    command: python run.py --live --leverage 2 --strategy passive
+    networks:
+      - arb-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Dashboard
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poly-hl-dashboard
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+      - ./templates:/app/templates
+    command: python dashboard_server.py
+    ports:
+      - "5000:5000"
+    networks:
+      - arb-network
+    depends_on:
+      - arb-bot
+
+networks:
+  arb-network:
+    driver: bridge

@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Main arbitrage bot
+  arb-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: polymarket-hyperliquid-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Mount logs directory for persistence
+      - ./logs:/app/logs
+      # Optional: Mount src for development (comment out for production)
+      # - ./src:/app/src
+    command: python run.py --live
+    networks:
+      - arb-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # Optional: Redis for caching (uncomment if needed)
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: arb-bot-redis
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis-data:/data
+  #   networks:
+  #     - arb-network
+  #   command: redis-server --appendonly yes
+
+  # Optional: PostgreSQL for trade history (uncomment if needed)
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: arb-bot-postgres
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: arb_bot
+  #     POSTGRES_USER: arbuser
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   networks:
+  #     - arb-network
+
+networks:
+  arb-network:
+    driver: bridge
+
+# volumes:
+#   redis-data:
+#   postgres-data:
